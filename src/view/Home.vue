@@ -38,6 +38,23 @@ async function createChecklist() {
   }
 }
 
+async function removeChecklist(id) {
+  try {
+    const token = Cookie.get("token");
+    const result = await axiosClient.delete(`/checklist/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const { statusCode } = result.data;
+    if (statusCode == 2300) {
+      getChecklist();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function getChecklist() {
   try {
     const token = Cookie.get("token");
@@ -74,6 +91,9 @@ onMounted(() => {
         <div :tabindex="data.id" role="button" class="btn justify-start m-1 w-full">
           <p>{{ data.name }}</p>
           <input type="checkbox" class="checkbox" :value="data.checklistCompletionStatus" />
+          <div @click="() => removeChecklist(data.id)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ff5861" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" /></svg>
+          </div>
         </div>
         <ul :tabindex="data.id" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
           <li v-for="item in data.items" :key="item.id" class="flex flex-row justify-center items-center">
