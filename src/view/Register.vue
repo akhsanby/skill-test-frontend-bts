@@ -16,7 +16,9 @@ async function handleRegister() {
       password: password.value,
     });
     const { message } = result.data;
-    toast.success(`${message}, silakan login`);
+    toast.success(`${message}, silakan login`, {
+      onClose: () => router.push("/"),
+    });
   } catch (error) {
     const { errorMessage } = error.response.data;
     toast.error(`${errorMessage}`);
